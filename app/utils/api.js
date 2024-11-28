@@ -1,4 +1,4 @@
-import { getAccessTokenSilently } from '@auth0/auth0-react'
+import { getAccessTokenSilently } from '@auth0/nextjs-auth0';
 
 const API_GATEWAY_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL
 const USER_SERVICE_URL = process.env.NEXT_PUBLIC_USER_SERVICE_URL

@@ -1,0 +1,48 @@
+name: Admin CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'admin/**'
+
+env:
+  ACR_NAME: your-acr-name
+  IMAGE_NAME: quiq-admin-app
+  AKS_CLUSTER_NAME: your-aks-cluster-name
+  AKS_RESOURCE_GROUP: your-aks-resource-group
+  NAMESPACE: quiq-admin
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Get AKS Credentials
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        resource-group: ${{ env.AKS_RESOURCE_GROUP }}
+        cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+        
+    - name: Create namespace if not exists
+      run: |
+        kubectl create namespace ${{ env.NAMESPACE }} --dry-run=client -o yaml | kubectl apply -f -
+        
+    - name: Deploy to AKS
+      uses: azure/k8s-deploy@v1
+      with:
+        manifests: |
+          admin/k8s/deployment.yaml
+          admin/k8s/service.yaml
+        images: |
+          ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        namespace: ${{ env.NAMESPACE }}
+
