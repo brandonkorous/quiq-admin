@@ -30,6 +30,8 @@ NEXT_PUBLIC_API_GATEWAY_URL=https://your-api-gateway-url.com
 NEXT_PUBLIC_USER_SERVICE_URL=https://your-user-service-url.com
 NEXT_PUBLIC_VIDEO_SERVICE_URL=https://your-video-service-url.com
 NEXT_PUBLIC_INTERACTION_SERVICE_URL=https://your-interaction-service-url.com
+```
+
 ## Installation
 
 1. Clone the repository:
